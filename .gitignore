@@ -11,4 +11,13 @@ output_*.png
 
 content_data/
 style_data/
-experiment/
+
+experiment/*
+!experiment/experiment1/
+experiment/experiment1/*
+!experiment/experiment1/decoder_final.pth
+
+*.pth.tar
+*.pt
+
+dataset/
