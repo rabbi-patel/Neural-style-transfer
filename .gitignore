@@ -1,9 +1,14 @@
 __pycache__/
 *.pyc
+
 venv/
 .env
+
 .idea/
 .vscode/
+
 output_*.png
-dataset/
-experiments/
+
+content_data/
+style_data/
+experiment/
