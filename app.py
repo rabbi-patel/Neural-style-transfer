@@ -87,12 +87,12 @@ def style_transfer(content_image, style_image, encoder, decoder, alpha, device):
     print("1. Starting style transfer")
 
     content_transform = transforms.Compose([
-        transforms.Resize((256,256)),
+        transforms.Resize((128,128)),
         transforms.ToTensor()
     ])
 
     style_transform = transforms.Compose([
-        transforms.Resize((256,256)),
+        transforms.Resize((128,128)),
         transforms.ToTensor()
     ])
 
