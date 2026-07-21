@@ -47,7 +47,45 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
+# def style_transfer(content_image, style_image, encoder, decoder, alpha, device):
+#     content_transform = transforms.Compose([
+#         transforms.Resize((256,256)),
+#         transforms.ToTensor()
+#     ])
+
+#     style_transform = transforms.Compose([
+#         transforms.Resize((256,256)),
+#         transforms.ToTensor()
+#     ])
+#     content_image = content_transform(content_image).unsqueeze(0).to(device)
+#     style_image = style_transform(style_image).unsqueeze(0).to(device)
+
+#     with torch.no_grad():
+#         content_feats = encoder(content_image, is_test=True)
+#         style_feats = encoder(style_image, is_test=True)
+
+#         stylized_feats = adaptive_instance_normalisation(
+#             content_feats,
+#             style_feats
+#         )
+
+#         stylized_feats = alpha * stylized_feats + (1 - alpha) * content_feats
+
+#         stylized_image = decoder(stylized_feats)
+
+#         del content_feats
+#         del style_feats
+#         del stylized_feats
+
+#         if device.type == "cuda":
+#             torch.cuda.empty_cache()
+
+#     return stylized_image.cpu()
+
 def style_transfer(content_image, style_image, encoder, decoder, alpha, device):
+
+    print("1. Starting style transfer")
+
     content_transform = transforms.Compose([
         transforms.Resize((256,256)),
         transforms.ToTensor()
@@ -57,28 +95,34 @@ def style_transfer(content_image, style_image, encoder, decoder, alpha, device):
         transforms.Resize((256,256)),
         transforms.ToTensor()
     ])
+
     content_image = content_transform(content_image).unsqueeze(0).to(device)
     style_image = style_transform(style_image).unsqueeze(0).to(device)
 
+    print("2. Images converted to tensors")
+
     with torch.no_grad():
+
         content_feats = encoder(content_image, is_test=True)
+        print("3. Content features extracted")
+
         style_feats = encoder(style_image, is_test=True)
+        print("4. Style features extracted")
 
         stylized_feats = adaptive_instance_normalisation(
             content_feats,
             style_feats
         )
 
+        print("5. AdaIN completed")
+
         stylized_feats = alpha * stylized_feats + (1 - alpha) * content_feats
 
         stylized_image = decoder(stylized_feats)
 
-        del content_feats
-        del style_feats
-        del stylized_feats
+        print("6. Decoder completed")
 
-        if device.type == "cuda":
-            torch.cuda.empty_cache()
+    print("7. Returning image")
 
     return stylized_image.cpu()
 
