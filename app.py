@@ -64,14 +64,23 @@ def style_transfer(content_image, style_image, encoder, decoder, alpha, device):
         content_feats = encoder(content_image, is_test=True)
         style_feats = encoder(style_image, is_test=True)
 
-        stylized_feats = adaptive_instance_normalisation(content_feats, style_feats)
+        stylized_feats = adaptive_instance_normalisation(
+            content_feats,
+            style_feats
+        )
 
         stylized_feats = alpha * stylized_feats + (1 - alpha) * content_feats
 
         stylized_image = decoder(stylized_feats)
 
-    return stylized_image
+        del content_feats
+        del style_feats
+        del stylized_feats
 
+        if device.type == "cuda":
+            torch.cuda.empty_cache()
+
+    return stylized_image.cpu()
 
 def save_image(image, path):
     image = image.cpu().clone()
